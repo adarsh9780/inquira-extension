@@ -5,7 +5,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build output (keep out/ for VS Code extensions)
-out
 dist
 build
 
@@ -60,3 +59,4 @@ coverage/
 # Temporary files
 .cache/
 .parcel-cache/
+.env
