@@ -3,6 +3,7 @@
   "displayName": "Inquira",
   "description": "AI-powered data analysis assistant for VS Code",
   "version": "0.1.0",
+  "publisher": "AdarshMaurya",
   "repository": {
     "type": "git",
     "url": "https://github.com/adarsh9780/inquira-extension"
@@ -97,7 +98,6 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./"
   },

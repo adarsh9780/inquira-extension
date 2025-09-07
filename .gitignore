@@ -55,7 +55,7 @@ coverage/
 # yarn.lock
 
 # VS Code extension files (uncomment to keep for testing/sharing)
-# *.vsix
+*.vsix
 
 # Temporary files
 .cache/
