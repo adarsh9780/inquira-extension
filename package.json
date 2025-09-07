@@ -1,0 +1,107 @@
+{
+  "name": "inquira-extension",
+  "displayName": "Inquira",
+  "description": "AI-powered data analysis assistant for VS Code",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adarsh9780/inquira-extension"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:inquiraview",
+    "onCommand:inquira.openSettings",
+    "onCommand:inquira.generateSchema",
+    "onCommand:inquira.viewSchema"
+  ],
+  "main": "./out/extension.js",
+  "files": [
+    "out/extension.js",
+    "out/providers/InquiraViewProvider.js",
+    "out/services/LLMService.js",
+    "out/services/SchemaManager.js",
+    "out/services/CodeInjector.js",
+    "out/prompts.js",
+    "media/main.css",
+    "media/webview.js",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "inquiraview",
+          "name": "Inquira",
+          "type": "webview",
+          "icon": "$(settings)",
+          "contextualTitle": "Inquira Data Assistant"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "inquira.showView",
+        "title": "Show Inquira",
+        "icon": "$(person)"
+      },
+      {
+        "command": "inquira.openSettings",
+        "title": "Open Settings",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "inquira.generateSchema",
+        "title": "Generate Schema"
+      },
+      {
+        "command": "inquira.viewSchema",
+        "title": "View Schema"
+      }
+    ],
+    "configuration": {
+      "title": "Inquira",
+      "properties": {
+        "inquira.dataPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to data file"
+        },
+        "inquira.hasSchema": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether schema has been generated"
+        },
+        "inquira.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Google Gemini API Key"
+        },
+        "inquira.modelName": {
+          "type": "string",
+          "default": "gemini-2.5-flash",
+          "description": "Gemini model to use"
+        },
+        "inquira.context": {
+          "type": "string",
+          "default": "",
+          "description": "Context about the data"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "@google/genai": "^1.17.0"
+  }
+}
