@@ -16,6 +16,7 @@
     const dataPathInput = document.getElementById('dataPath');
     const contextInput = document.getElementById('context');
     const modelInput = document.getElementById('model');
+    const browseDataPathButton = document.getElementById('browseDataPath');
 
 
     // Enable input by default
@@ -96,6 +97,13 @@
         });
     }
 
+    // Browse data path button event listener
+    if (browseDataPathButton) {
+        browseDataPathButton.addEventListener('click', () => {
+            vscode.postMessage({ type: 'openFileDialog' });
+        });
+    }
+
     if (askButton) {
         askButton.addEventListener('click', (e) => {
             console.log('Ask button clicked');
@@ -144,6 +152,11 @@
                 break;
             case 'settingsUpdated':
                 closeSettingsModal();
+                break;
+            case 'fileSelected':
+                if (dataPathInput) {
+                    dataPathInput.value = message.path;
+                }
                 break;
             case 'response':
                 console.log('Received response:', message);

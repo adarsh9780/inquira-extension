@@ -1,31 +1,7 @@
-import { GoogleGenAI, Type } from "@google/genai";
 import { SYSTEM_INSTRUCTION, SCHEMA_GENERATION_PROMPT, CODE_GENERATION_PROMPT, fillPrompts } from "../prompts";
 
-const CodeOutput = {
-    type: Type.OBJECT,
-    properties: {
-        is_safe: { type: Type.BOOLEAN },
-        is_relevant: { type: Type.BOOLEAN },
-        code: { type: Type.STRING },
-        explanation: { type: Type.STRING }
-    }
-};
-
-const SchemaItem = {
-    type: Type.OBJECT,
-    properties: {
-        name: { type: Type.STRING },
-        description: { type: Type.STRING }
-    }
-};
-
-const SchemaList = {
-    type: Type.ARRAY,
-    items: SchemaItem
-};
-
 export class LLMService {
-    private ai: GoogleGenAI | null = null;
+    private ai: any = null;
 
     public async generateCode(
         question: string,
@@ -35,9 +11,21 @@ export class LLMService {
         currentFileContent?: string,
         dataPath?: string
     ): Promise<any> {
+        const { GoogleGenAI, Type } = await import("@google/genai");
+
         if (!this.ai) {
             this.ai = new GoogleGenAI({ apiKey: apiKey });
         }
+
+        const CodeOutput = {
+            type: Type.OBJECT,
+            properties: {
+                is_safe: { type: Type.BOOLEAN },
+                is_relevant: { type: Type.BOOLEAN },
+                code: { type: Type.STRING },
+                explanation: { type: Type.STRING }
+            }
+        };
 
         const replacements = {
             SYSTEM_INSTRUCTION: SYSTEM_INSTRUCTION,
@@ -63,9 +51,24 @@ export class LLMService {
     }
 
     public async generateSchema(dataPath: string, apiKey: string, model: string = 'gemini-2.5-flash', context?: string): Promise<any> {
+        const { GoogleGenAI, Type } = await import("@google/genai");
+
         if (!this.ai) {
             this.ai = new GoogleGenAI({ apiKey: apiKey });
         }
+
+        const SchemaItem = {
+            type: Type.OBJECT,
+            properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING }
+            }
+        };
+
+        const SchemaList = {
+            type: Type.ARRAY,
+            items: SchemaItem
+        };
 
         // Get column names using DuckDB
         const columnNames = await this.getColumnNames(dataPath);

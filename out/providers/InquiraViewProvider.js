@@ -95,6 +95,23 @@ class InquiraViewProvider {
                 case 'viewSchema':
                     this._viewSchema();
                     break;
+                case 'openFileDialog':
+                    const fileUri = await vscode.window.showOpenDialog({
+                        canSelectFiles: true,
+                        canSelectFolders: false,
+                        canSelectMany: false,
+                        defaultUri: vscode.workspace.workspaceFolders?.[0]?.uri,
+                        filters: {
+                            'Data Files': ['csv', 'json', 'parquet']
+                        }
+                    });
+                    if (fileUri && fileUri[0]) {
+                        this._view?.webview.postMessage({
+                            type: 'fileSelected',
+                            path: fileUri[0].fsPath
+                        });
+                    }
+                    break;
             }
         });
     }
@@ -632,6 +649,8 @@ class InquiraViewProvider {
                 const dataPathInput = document.getElementById('dataPath');
                 const contextInput = document.getElementById('context');
                 const modelInput = document.getElementById('model');
+                const browseDataPathButton = document.getElementById('browseDataPath');
+                const browseDataPathButton = document.getElementById('browseDataPath');
 
                 vscode.postMessage({ type: 'debug', message: 'Elements found: questionInput=' + !!questionInput + ', askButton=' + !!askButton + ', messagesDiv=' + !!messagesDiv });
 
@@ -677,6 +696,12 @@ class InquiraViewProvider {
                         model: model
                     });
                 });
+
+                if (browseDataPathButton) {
+                    browseDataPathButton.addEventListener('click', () => {
+                        vscode.postMessage({ type: 'openFileDialog' });
+                    });
+                }
 
                 if (askButton) {
                     askButton.addEventListener('click', (e) => {
@@ -752,6 +777,11 @@ class InquiraViewProvider {
                             askButton.disabled = false;
                             askButton.style.display = 'block';
                             thinkingSpinner.style.display = 'none';
+                            break;
+                        case 'fileSelected':
+                            if (dataPathInput) {
+                                dataPathInput.value = message.path;
+                            }
                             break;
                         case 'error':
                             console.log('Received error:', message);
@@ -842,7 +872,10 @@ class InquiraViewProvider {
                                 </div>
                                 <div class="form-group">
                                     <label for="dataPath">Data File Path</label>
-                                    <input type="text" id="dataPath" placeholder="/path/to/your/data.csv" />
+                                    <div style="display: flex; gap: 8px;">
+                                        <input type="text" id="dataPath" placeholder="/path/to/your/data.csv" style="flex: 1;" />
+                                        <button type="button" id="browseDataPath" class="btn btn-secondary" style="padding: 8px 12px;">Browse</button>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="context">Data Context (Optional)</label>
@@ -850,7 +883,10 @@ class InquiraViewProvider {
                                 </div>
                                 <div class="form-group">
                                     <label for="model">Model</label>
-                                    <input type="text" id="model" placeholder="gemini-2.5-flash" value="gemini-2.5-flash" />
+                                    <select id="model">
+                                        <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                                        <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                                    </select>
                                 </div>
                                 <div class="button-group">
                                     <button type="button" id="cancelSettings" class="btn btn-secondary">Cancel</button>

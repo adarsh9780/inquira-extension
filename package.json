@@ -2,7 +2,8 @@
   "name": "inquira-extension",
   "displayName": "Inquira",
   "description": "AI-powered data analysis assistant for VS Code",
-  "version": "0.1.0",
+  "icon": "Inquira.png",
+  "version": "0.1.5",
   "publisher": "AdarshMaurya",
   "repository": {
     "type": "git",
@@ -20,23 +21,30 @@
     "onCommand:inquira.generateSchema",
     "onCommand:inquira.viewSchema"
   ],
-  "main": "./out/extension.js",
+  "main": "./out/main.js",
   "files": [
-    "out/extension.js",
-    "out/providers/InquiraViewProvider.js",
-    "out/services/LLMService.js",
-    "out/services/SchemaManager.js",
-    "out/services/CodeInjector.js",
-    "out/prompts.js",
+    "out/main.js",
+    "out/vendors.js",
     "media/main.css",
     "media/webview.js",
+    "media/inquira.svg",
+    "Inquira.png",
     "package.json",
     "README.md",
     "LICENSE"
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "inquira-sidebar",
+          "title": "Inquira",
+          "icon": "media/inquira.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "inquira-sidebar": [
         {
           "id": "inquiraview",
           "name": "Inquira",
@@ -87,6 +95,14 @@
         "inquira.modelName": {
           "type": "string",
           "default": "gemini-2.5-flash",
+          "enum": [
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite"
+          ],
+          "enumDescriptions": [
+            "Gemini 2.5 Flash model",
+            "Gemini 2.5 Flash Lite model"
+          ],
           "description": "Gemini model to use"
         },
         "inquira.context": {
@@ -98,10 +114,20 @@
     }
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "compile": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@google/genai": "^1.17.0"
+    "@google/genai": "^1.17.0",
+    "bufferutil": "^4.0.9",
+    "utf-8-validate": "^6.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "@types/vscode": "^1.74.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.2",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
   }
 }
